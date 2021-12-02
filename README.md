@@ -10,13 +10,9 @@ Fork of World of Warcraft addon that show Dark Souls style You died message.
 
 Download zip from releases page and unzip to `WoWFolder/_retail_/Interface/AddOns`
 
-## Instuctions
+## Description
 
 **Dark Souls Death Screen** emulates the "YOU DIED" death screen of Dark Souls to make every death in WoW a little more soul-crushing.
-
-<figure class="video_container">
-  <iframe src="https://www.youtube.com/embed/2v956KpzanU" frameborder="0" allowfullscreen="true"> </iframe>
-</figure>
 
 ## Commands
 
