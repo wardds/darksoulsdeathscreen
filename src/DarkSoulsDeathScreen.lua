@@ -159,11 +159,11 @@ local function GetBackground(version)
 
         local top = frame:CreateTexture()
         top:SetColorTexture(0, 0, 0)
-        top:SetGradientAlpha("VERTICAL", 0, 0, 0, 1, 0, 0, 0, 0) -- orientation, startR, startG, startB, startA, endR, endG, endB, endA (start = bottom, end = top)
+        top:SetGradient("VERTICAL", CreateColor(0,0,0,1), CreateColor(0,0,0,0))
 
         local btm = frame:CreateTexture()
         btm:SetColorTexture(0, 0, 0)
-        btm:SetGradientAlpha("VERTICAL", 0, 0, 0, 0, 0, 0, 0, 1)
+        btm:SetGradient("VERTICAL", CreateColor(0,0,0,0), CreateColor(0,0,0,1))
 
         -- size the frame
         local height = BACKGROUND_HEIGHT_PERCENT * ScreenHeight
