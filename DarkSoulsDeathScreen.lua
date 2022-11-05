@@ -1,8 +1,7 @@
-
-local print, strsplit, select, tonumber, tostring, wipe, remove
-    = print, strsplit, select, tonumber, tostring, wipe, table.remove
-local CreateFrame, GetSpellInfo, PlaySoundFile, UIParent, UnitBuff, C_Timer
-    = CreateFrame, GetSpellInfo, PlaySoundFile, UIParent, UnitBuff, C_Timer
+local print, strsplit, select, tonumber, tostring, wipe, remove = print, strsplit, select, tonumber, tostring, wipe,
+    table.remove
+local CreateFrame, PlaySoundFile, UIParent, UnitBuff, C_Timer = CreateFrame, PlaySoundFile,
+    UIParent, UnitBuff, C_Timer
 
 local me = ...
 
@@ -160,11 +159,11 @@ local function GetBackground(version)
 
         local top = frame:CreateTexture()
         top:SetColorTexture(0, 0, 0)
-        top:SetGradient("VERTICAL", CreateColor(0,0,0,1), CreateColor(0,0,0,0))
+        top:SetGradient("VERTICAL", CreateColor(0, 0, 0, 1), CreateColor(0, 0, 0, 0))
 
         local btm = frame:CreateTexture()
         btm:SetColorTexture(0, 0, 0)
-        btm:SetGradient("VERTICAL", CreateColor(0,0,0,0), CreateColor(0,0,0,1))
+        btm:SetGradient("VERTICAL", CreateColor(0, 0, 0, 0), CreateColor(0, 0, 0, 1))
 
         -- size the frame
         local height = BACKGROUND_HEIGHT_PERCENT * ScreenHeight
@@ -556,6 +555,9 @@ end
 
 local function BonfireLit(version)
     local frame = GetBonfireLitFrame(version)
+    if frame == nil then
+        return
+    end
     frame:SetAlpha(0)
     frame.blurred:SetAlpha(0)
     frame:SetScale(BONFIRE_START_SCALE)
@@ -626,7 +628,7 @@ function DSFrame:UNIT_SPELLCAST_SUCCEEDED(event, unit, spell, rank, lineId, spel
                 local bonfireLitSound = BONFIRE_LIT_SOUND[db.version or 0]
                 if bonfireLitSound then
                     PlaySoundFile(bonfireLitSound, "Master")
-                --[[
+                    --[[
                 else
                     -- let the anim print the error message
                 --]]
@@ -691,6 +693,7 @@ local function GetValidVersions()
     end
     return result
 end
+
 commands["version"] = function(args)
     local doPrint = true
     local ver = args[1]
@@ -764,9 +767,11 @@ local indent = "  "
 local usage = {
     ("Usage: %s"):format(slash),
     ("%s%s on/off: Enables/disables the death screen."),
-    ("%s%s version ["..GetValidVersions().."]: Cycles through animation versions (eg, Dark Souls 1/Dark Souls 2)."),
+    ("%s%s version [" .. GetValidVersions() .. "]: Cycles through animation versions (eg, Dark Souls 1/Dark Souls 2)."),
     ("%s%s sound [on/off]: Enables/disables the death screen sound. Toggles if passed no argument."),
-    ("%s%s tex [path\\to\\custom\\texture]: Toggles between the 'YOU DIED' and 'THANKS OBAMA' textures. If an argument is supplied, the custom texture will be used instead."),
+    (
+        "%s%s tex [path\\to\\custom\\texture]: Toggles between the 'YOU DIED' and 'THANKS OBAMA' textures. If an argument is supplied, the custom texture will be used instead."
+        ),
     ("%s%s test [bonfire]: Runs the death animation or the bonfire animation if 'bonfire' is passed as an argument."),
     ("%s%s help: Shows this message."),
 }
