@@ -1,8 +1,9 @@
+
 local print, strsplit, select, tonumber, tostring, wipe, remove
     = print, strsplit, select, tonumber, tostring, wipe, table.remove
 local CreateFrame, GetSpellInfo, PlaySoundFile, UIParent, UnitBuff, C_Timer
     = CreateFrame, GetSpellInfo, PlaySoundFile, UIParent, UnitBuff, C_Timer
-    
+
 local me = ...
 
 local NUM_VERSIONS = 2
@@ -93,7 +94,7 @@ end
 local function UnrecognizedVersion()
     local msg = "[|cffFF0000Error|r] Unrecognized version flag, \"%s\"!"
     Print(msg:format(tostring(db.version)))
-    
+
     -- just correct the issue
     db.version = 1
 end
@@ -146,30 +147,30 @@ local background = {} -- bg frames
 
 local function GetBackground(version)
     if not version then return nil end
-    
+
     local frame = background[version]
     if not frame then
         frame = CreateFrame("Frame")
         frame.version = version
         background[version] = frame
-        
+
         local bg = frame:CreateTexture()
         bg:SetColorTexture(0, 0, 0)
-        
+
         local top = frame:CreateTexture()
         top:SetColorTexture(0, 0, 0)
         top:SetGradientAlpha("VERTICAL", 0, 0, 0, 1, 0, 0, 0, 0) -- orientation, startR, startG, startB, startA, endR, endG, endB, endA (start = bottom, end = top)
-        
+
         local btm = frame:CreateTexture()
         btm:SetColorTexture(0, 0, 0)
         btm:SetGradientAlpha("VERTICAL", 0, 0, 0, 0, 0, 0, 0, 1)
-        
+
         -- size the frame
         local height = BACKGROUND_HEIGHT_PERCENT * ScreenHeight
         local bgHeight = BACKGROUND_GRADIENT_PERCENT * height
         frame:SetSize(ScreenWidth, height)
         frame:SetFrameStrata(BG_STRATA)
-        
+
         --[[
         1: bg positioned in center of screen
         2: bg positioned 60% from top of screen
@@ -180,16 +181,16 @@ local function GetBackground(version)
             local y = 0.6 * ScreenHeight - bgHeight
             frame:SetPoint("TOP", 0, -y)
         end
-        
+
         -- size the background's constituent components
         top:ClearAllPoints()
         top:SetPoint("TOPLEFT", 0, 0)
         top:SetPoint("BOTTOMRIGHT", frame, "TOPRIGHT", 0, -bgHeight)
-        
+
         bg:ClearAllPoints()
         bg:SetPoint("TOPLEFT", 0, -bgHeight)
         bg:SetPoint("BOTTOMRIGHT", 0, bgHeight)
-        
+
         btm:ClearAllPoints()
         btm:SetPoint("BOTTOMLEFT", 0, 0)
         btm:SetPoint("TOPRIGHT", frame, "BOTTOMRIGHT", 0, bgHeight)
@@ -251,18 +252,18 @@ end
 
 local function GetYouDiedFrame(version)
     if not version then return nil end
-    
+
     local frame = youDied[version]
     if not frame then
         local parent = background[version]
         frame = CreateFrame("Frame")
         youDied[version] = frame
         frame:SetPoint("CENTER", parent, 0, 0)
-        
+
         local FADE_IN_TIME = FADE_IN_TIME[version]
         local FADE_OUT_TIME = FADE_OUT_TIME[version]
         local TEXT_FADE_IN_DURATION = TEXT_FADE_IN_DURATION[version]
-        
+
         -- intial animation (fade-in + zoom)
         local show = frame:CreateAnimationGroup()
         local fadein = show:CreateAnimation("Alpha")
@@ -278,7 +279,7 @@ local function GetYouDiedFrame(version)
         zoom:SetOrder(1)
         zoom:SetDuration(1.3)
         zoom:SetEndDelay(TEXT_END_DELAY)
-        
+
         -- hide animation (fade-out + slower zoom)
         local hide = frame:CreateAnimationGroup()
         local fadeout = hide:CreateAnimation("Alpha")
@@ -288,16 +289,16 @@ local function GetYouDiedFrame(version)
         fadeout:SetSmoothing("IN_OUT")
         fadeout:SetStartDelay(FADE_OUT_DELAY)
         fadeout:SetDuration(FADE_OUT_TIME + FADE_OUT_DELAY)
-        
+
         frame:SetFrameStrata(TEXT_STRATA)
-        
+
         frame.tex = frame:CreateTexture()
         frame.tex:SetAllPoints()
-        
+
         if version == 1 then
             -- local y = (0.6 * ScreenHeight) + height
             -- frame:SetPoint("TOP", 0, -y)
-        
+
             local zoom = hide:CreateAnimation("Scale")
             zoom:SetOrigin("CENTER", 0, 0)
             zoom:SetScale(1.07, 1.038)
@@ -315,7 +316,7 @@ local function GetYouDiedFrame(version)
                 end)
             end)
         end
-        
+
         show:SetScript("OnFinished", function(self)
             -- hide once the delay finishes
             frame:SetAlpha(TEXT_END_ALPHA)
@@ -342,11 +343,11 @@ local function YouDied(version)
         --frame.tex:SetTexture("greenboxerino")
         frame:SetAlpha(0)
         frame:SetScale(1)
-        
+
         local height = TEXT_HEIGHT_PERCENT * ScreenHeight
         frame:SetSize(height / YOU_DIED_WIDTH_HEIGHT_RATIO, height)
         frame.width, frame.height = frame:GetSize()
-        
+
         frame.show:Play()
     else
         UnrecognizedVersion()
@@ -362,7 +363,7 @@ local bonfireLit = {} -- frames
 
 local function GetBonfireLitFrame(version)
     if not version then return nil end
-    
+
     local frame = bonfireLit[version]
     if not frame then
         local parent = background[version]
@@ -370,7 +371,7 @@ local function GetBonfireLitFrame(version)
         frame.version = version
         bonfireLit[version] = frame
         frame:SetPoint("CENTER", parent, 0, 0)
-        
+
         local FADE_IN_TIME = FADE_IN_TIME[version]
         local FADE_OUT_TIME = FADE_OUT_TIME[version]
         local TEXT_FADE_IN_DURATION = TEXT_FADE_IN_DURATION[version]
@@ -381,14 +382,14 @@ local function GetBonfireLitFrame(version)
         local BONFIRE_FLARE_OUT_TIME = BONFIRE_FLARE_OUT_TIME[version]
         local BONFIRE_FLARE_OUT_END_DELAY = BONFIRE_FLARE_OUT_END_DELAY[version]
         local BONFIRE_FADE_OUT_DELAY = BONFIRE_FADE_OUT_DELAY[version]
-        
+
         --[[
         'static' BONFIRE LIT
         --]]
         frame.tex = frame:CreateTexture()
         frame.tex:SetAllPoints()
         frame.tex:SetTexture(BONFIRE_LIT)
-        
+
         -- intial animation (fade-in)
         local show = frame:CreateAnimationGroup()
         local fadein = show:CreateAnimation("Alpha")
@@ -397,7 +398,7 @@ local function GetBonfireLitFrame(version)
         fadein:SetOrder(1)
         fadein:SetDuration(FADE_IN_TIME + TEXT_FADE_IN_DURATION)
         fadein:SetEndDelay(TEXT_END_DELAY)
-        
+
         -- hide animation (fade-out)
         local hide = frame:CreateAnimationGroup()
         local fadeout = hide:CreateAnimation("Alpha")
@@ -408,9 +409,9 @@ local function GetBonfireLitFrame(version)
         fadeout:SetStartDelay(BONFIRE_FADE_OUT_DELAY)
         fadeout:SetDuration(FADE_OUT_TIME)
         --fadeout:SetDuration(FADE_OUT_TIME + FADE_OUT_DELAY)
-        
+
         frame:SetFrameStrata(TEXT_STRATA)
-        
+
         if version == 1 then
             fadein:SetScript("OnUpdate", function(self, e)
                 self.elapsed = (self.elapsed or 0) + e
@@ -432,7 +433,7 @@ local function GetBonfireLitFrame(version)
             zoom:SetDuration(FADE_OUT_TIME)
             --zoom:SetDuration(fadeout:GetDuration())
         end
-        
+
         show:SetScript("OnFinished", function(self)
             frame:SetAlpha(BONFIRE_TEXT_END_ALPHA)
         end)
@@ -443,19 +444,19 @@ local function GetBonfireLitFrame(version)
         end)
         frame.show = show
         frame.hide = hide
-        
+
         --[[
         'blurred' BONFIRE LIT
         --]]
         frame.blurred = CreateFrame("Frame")
         frame.blurred:SetPoint("CENTER", parent, 0, 0)
         frame.blurred:SetFrameStrata(TEXT_STRATA)
-    
+
         -- blurred "BONFIRE LIT"
         frame.blurred.tex = frame.blurred:CreateTexture()
         frame.blurred.tex:SetAllPoints()
         frame.blurred.tex:SetTexture(BONFIRE_LIT_BLUR)
-        
+
         -- intial animation
         local show = frame.blurred:CreateAnimationGroup()
         local fadein = show:CreateAnimation("Alpha")
@@ -478,7 +479,7 @@ local function GetBonfireLitFrame(version)
         flareOut:SetStartDelay(FADE_IN_TIME + TEXT_FADE_IN_DURATION) -- TODO: v2 needs to wait
         flareOut:SetEndDelay(BONFIRE_FLARE_OUT_END_DELAY)
         flareOut:SetDuration(BONFIRE_FLARE_OUT_TIME)
-        
+
         -- hide animation (fade-out)
         local hide = frame.blurred:CreateAnimationGroup()
         local fadeout = hide:CreateAnimation("Alpha")
@@ -489,7 +490,7 @@ local function GetBonfireLitFrame(version)
         fadeout:SetStartDelay(BONFIRE_FADE_OUT_DELAY)
         fadeout:SetDuration(FADE_OUT_TIME)
         --fadeout:SetDuration(FADE_OUT_TIME + FADE_OUT_DELAY)
-        
+
         -- set the end scale of the animation to prevent the frame
         -- from snapping to its original scale
         local function SetEndScale(self)
@@ -501,10 +502,10 @@ local function GetBonfireLitFrame(version)
                 xScale = xScale * BONFIRE_FLARE_SCALE_X
                 yScale = yScale * BONFIRE_FLARE_SCALE_Y
             end
-            
+
             frame.blurred:SetSize(width * xScale, height * yScale)
         end
-        
+
         if version == 1 then
             local flareIn = show:CreateAnimation("Scale")
             flareIn:SetOrigin("CENTER", 0, 0)
@@ -515,11 +516,11 @@ local function GetBonfireLitFrame(version)
             flareIn:SetSmoothing("OUT")
             flareIn:SetDuration(BONFIRE_FLARE_IN_TIME)
             flareIn:SetEndDelay(BONFIRE_END_DELAY)
-            
+
             flareIn:SetScript("OnFinished", SetEndScale)
         elseif version == 2 then
             --frame.blurred:SetPoint("CENTER", 0, -0.1 * ScreenHeight)
-            
+
             local zoom = hide:CreateAnimation("Scale")
             zoom:SetOrigin("CENTER", 0, 0)
             zoom:SetScale(BONFIRE_BLUR_END_SCALE_X, BONFIRE_BLUR_END_SCALE_Y)
@@ -528,14 +529,14 @@ local function GetBonfireLitFrame(version)
             zoom:SetStartDelay(BONFIRE_FADE_OUT_DELAY)
             zoom:SetDuration(FADE_OUT_TIME)
             --zoom:SetDuration(fadeout:GetDuration())
-            
+
             flareOut:SetScript("OnFinished", SetEndScale)
         end
-        
+
         show:SetScript("OnFinished", function(self)
             -- hide once the delay finishes
             frame.blurred:SetAlpha(BONFIRE_BLUR_TEXT_END_ALPHA)
-            
+
             fadeout:SetScript("OnUpdate", HideBackgroundAfterDelay)
             frame.hide:Play() -- static hide
             hide:Play() -- blurred hide
@@ -544,7 +545,7 @@ local function GetBonfireLitFrame(version)
             -- reset to initial state
             frame.blurred:SetAlpha(0)
             frame.blurred:SetScale(BONFIRE_START_SCALE)
-            
+
             bonfireIsLighting = nil
         end)
         frame.blurred.show = show
@@ -559,11 +560,11 @@ local function BonfireLit(version)
     frame:SetScale(BONFIRE_START_SCALE)
     -- scale the blurred texture down a bit since it is larger than the static texture
     frame.blurred:SetScale(BONFIRE_START_SCALE * 0.97)
-    
+
     local height = TEXT_HEIGHT_PERCENT * ScreenHeight
     frame:SetSize(height / BONFIRE_WIDTH_HEIGHT_RATIO, height)
     frame.blurred:SetSize(height / BONFIRE_WIDTH_HEIGHT_RATIO, height)
-    
+
     frame.show:Play()
     frame.blurred.show:Play()
     bonfireIsLighting = true
@@ -589,7 +590,7 @@ function DSFrame:ADDON_LOADED(event, name)
             self:SetScript("OnEvent", nil)
         end
         self.ADDON_LOADED = nil
-        
+
         -- add the version flag to old SVs
         db.version = db.version or 1
     end
@@ -601,13 +602,13 @@ DSFrame:RegisterEvent("PLAYER_DEAD")
 function DSFrame:PLAYER_DEAD(event)
     -- event==nil means a fake event
     if not event or not (UnitBuff("player", SpiritOfRedemption) or UnitBuff("player", FeignDeath)) then
-    
+
         -- TODO? cancel other anims (ie, bonfire lit)
-        
+
         if db.sound then
             PlaySoundFile(YOU_DIED_SOUND, "Master")
         end
-        
+
         SpawnBackground(db.version)
         YouDied(db.version)
     end
@@ -630,7 +631,7 @@ function DSFrame:UNIT_SPELLCAST_SUCCEEDED(event, unit, spell, rank, lineId, spel
                 --]]
                 end
             end
-            
+
             if db.version == 1 then
                 -- begin the animation after the bonfire is actually lit (to mimic Dark Souls 1)
                 C_Timer.After(0.6, function()
@@ -642,7 +643,7 @@ function DSFrame:UNIT_SPELLCAST_SUCCEEDED(event, unit, spell, rank, lineId, spel
                 SpawnBackground(db.version)
                 BonfireLit(db.version)
             end
-        
+
         end
     end
 end
@@ -704,7 +705,7 @@ commands["version"] = function(args)
         -- cycle
         db.version = (db.version % NUM_VERSIONS) + 1
     end
-    
+
     if doPrint then
         Print(("Using Dark Souls %d animations"):format(db.version))
     end
@@ -726,7 +727,7 @@ commands["sound"] = function(args)
         -- toggle
         db.sound = not db.sound
     end
-    
+
     if doPrint then
         Print(("Sound %s"):format(OnOffString(db.sound)))
     end
@@ -785,7 +786,7 @@ function SlashCmdList.DARKSOULSDEATHSCREEN(msg)
     msg = msg and msg:lower()
     local args = pack(strsplit(delim, msg))
     local cmd = remove(args, 1)
-    
+
     local exec = cmd and type(commands[cmd]) == "function" and commands[cmd] or commands["h"]
     exec(args)
 end
