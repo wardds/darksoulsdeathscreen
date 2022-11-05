@@ -150,7 +150,8 @@ local function GetBackground(version)
 
     local frame = background[version]
     if not frame then
-        frame = CreateFrame("Frame")
+        -- inherit from DefaultScaleFrame so UIScale does not affect sizing and positioning
+        frame = CreateFrame("Frame", nil,nil,"DefaultScaleFrame")
         frame.version = version
         background[version] = frame
 
