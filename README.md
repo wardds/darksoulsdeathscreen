@@ -1,18 +1,13 @@
-# DarkSoulsDeathScreen
-Fork of World of Warcraft addon that show Dark Souls style You died message.
+# Dark Souls Death Screen (by Aethyx)
 
-[Original mod](https://www.curseforge.com/wow/addons/dark-souls-death-screen) not updated sinse 6.0.3 patch.
+Adds Dark Souls' iconic "YOU DIED" death screen to WoW.
+Also includes a "bonfire lit" animation when resting at the Wayfarer's Bonfire toy.
 
-## Changes
- * Fixed displaying You Died message on 9.1.5
+Fork of the [original project by _ForgeUser3447963](https://www.curseforge.com/wow/addons/dark-souls-death-screen)
 
 ## Install
 
 Download zip from releases page and unzip to `WoWFolder/_retail_/Interface/AddOns`
-
-## Description
-
-**Dark Souls Death Screen** emulates the "YOU DIED" death screen of Dark Souls to make every death in WoW a little more soul-crushing.
 
 ## Commands
 
