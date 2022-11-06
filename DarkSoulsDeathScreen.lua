@@ -79,8 +79,10 @@ local BONFIRE_FADE_OUT_DELAY = {
 local TEXT_END_DELAY = 0.5 -- in seconds
 local BONFIRE_END_DELAY = 0.05 -- in seconds
 local BACKGROUND_GRADIENT_PERCENT = 0.15 -- of background height
-local BACKGROUND_HEIGHT_PERCENT = 0.21 -- of screen height
-local TEXT_HEIGHT_PERCENT = 0.18 -- of screen height
+local BASE_BACKGROUND_HEIGHT_PERCENT = 0.21 -- of screen height
+local BACKGROUND_HEIGHT_PERCENT = BASE_BACKGROUND_HEIGHT_PERCENT
+local BASE_TEXT_HEIGHT_PERCENT = 0.18 -- of screen height
+local TEXT_HEIGHT_PERCENT = BASE_TEXT_HEIGHT_PERCENT
 
 local ScreenWidth, ScreenHeight = UIParent:GetSize()
 local db
@@ -576,6 +578,15 @@ end
 -- ------------------------------------------------------------------
 -- Event handlers
 -- ------------------------------------------------------------------
+local function ApplyScale(scale)
+    BACKGROUND_HEIGHT_PERCENT = BASE_BACKGROUND_HEIGHT_PERCENT * scale
+    TEXT_HEIGHT_PERCENT = BASE_TEXT_HEIGHT_PERCENT * scale
+    -- clear cached frames
+    background = {}
+    youDied = {}
+    bonfireLit = {}
+end
+
 DSFrame:RegisterEvent("ADDON_LOADED")
 function DSFrame:ADDON_LOADED(event, name)
     if name == me then
@@ -587,6 +598,7 @@ function DSFrame:ADDON_LOADED(event, name)
             sound = true, -- sound enabled flag
             tex = YOU_DIED, -- death animation texture
             version = 1, -- animation version
+            scale = 1,
         }
         db = DarkSoulsDeathScreen
         if not db.enabled then
@@ -594,8 +606,11 @@ function DSFrame:ADDON_LOADED(event, name)
         end
         self.ADDON_LOADED = nil
 
-        -- add the version flag to old SVs
+        -- apply new flags to old releases
         db.version = db.version or 1
+        db.scale = db.scale or 1
+
+        ApplyScale(db.scale)
     end
 end
 
@@ -754,6 +769,16 @@ commands["tex"] = function(args)
     end
     Print(("Texture set to '%s'"):format(tex))
 end
+commands["scale"] = function(args)
+    local scale = args[1]
+    -- default to 1
+    if not scale then
+        scale = 1
+    end
+    db.scale = scale
+    ApplyScale(db.scale)
+    Print(("Scale set to '%s'"):format(scale))
+end
 commands["test"] = function(args)
     local anim = args[1]
     if anim == "b" or anim == "bonfire" then
@@ -772,6 +797,7 @@ local usage = {
     (
         "%s%s tex [path\\to\\custom\\texture]: Toggles between the 'YOU DIED' and 'THANKS OBAMA' textures. If an argument is supplied, the custom texture will be used instead."
         ),
+    ("%s%s scale [number]: Set a custom scale for all animations. Defaults to 1 if passed no argument."),
     ("%s%s test [bonfire]: Runs the death animation or the bonfire animation if 'bonfire' is passed as an argument."),
     ("%s%s help: Shows this message."),
 }
