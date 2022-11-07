@@ -295,12 +295,11 @@ local function GetYouDiedFrame(version)
         if version == 1 then
             -- local y = (0.6 * ScreenHeight) + height
             -- frame:SetPoint("TOP", 0, -y)
-
-            local zoom = hide:CreateAnimation("Scale")
-            zoom:SetOrigin("CENTER", 0, 0)
-            zoom:SetScale(1.07, 1.038)
-            zoom:SetOrder(1)
-            zoom:SetDuration(FADE_OUT_TIME + FADE_OUT_DELAY + 0.3)
+            local outZoom = hide:CreateAnimation("Scale")
+            outZoom:SetOrigin("CENTER", 0, 0)
+            outZoom:SetScale(1.07, 1.038)
+            outZoom:SetOrder(1)
+            outZoom:SetDuration(FADE_OUT_TIME + FADE_OUT_DELAY + 0.3)
         elseif version == 2 then
             -- frame:SetPoint("CENTER", 0, -0.1 * ScreenHeight)
             fadein:SetScript("OnPlay", function(self)
