@@ -253,7 +253,7 @@ local function GetYouDiedFrame(version)
     local frame = youDied[version]
     if not frame then
         local parent = background[version]
-        frame = CreateFrame("Frame")
+        frame = CreateFrame("Frame", nil, parent)
         youDied[version] = frame
         frame:SetPoint("CENTER", parent, 0, 0)
 
