@@ -151,8 +151,7 @@ local function GetBackground(version)
 
     local frame = background[version]
     if not frame then
-        -- inherit from DefaultScaleFrame so UIScale does not affect sizing and positioning
-        frame = CreateFrame("Frame", nil, nil, "DefaultScaleFrame")
+        frame = CreateFrame("Frame", nil, UIParent)
         frame.version = version
         background[version] = frame
 
@@ -173,15 +172,11 @@ local function GetBackground(version)
         frame:SetSize(ScreenWidth, height)
         frame:SetFrameStrata(BG_STRATA)
 
-        --[[
-        1: bg positioned in center of screen
-        2: bg positioned 60% from top of screen
-        --]]
+        -- Positions compared with random videos on the youtuubs
         if version == 1 then
-            frame:SetPoint("CENTER", 0, 0)
+            frame:SetPoint("BOTTOM", 0, (ScreenHeight * 0.47) - (height / 2))
         elseif version == 2 then
-            local y = 0.6 * ScreenHeight - bgHeight
-            frame:SetPoint("TOP", 0, -y)
+            frame:SetPoint("BOTTOM", 0, (ScreenHeight * 0.28) - (height / 2))
         end
 
         -- size the background's constituent components
@@ -342,7 +337,6 @@ local function YouDied(version)
         if frame.tex:GetTexture() ~= db.tex then
             frame.tex:SetTexture(db.tex)
         end
-        --frame.tex:SetTexture("greenboxerino")
         frame:SetAlpha(0)
         frame:SetScale(1)
 
