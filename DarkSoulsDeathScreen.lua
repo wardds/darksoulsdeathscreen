@@ -151,8 +151,7 @@ local function GetBackground(version)
 
     local frame = background[version]
     if not frame then
-        -- inherit from DefaultScaleFrame so UIScale does not affect sizing and positioning
-        frame = CreateFrame("Frame", nil, nil, "DefaultScaleFrame")
+        frame = CreateFrame("Frame", nil, UIParent)
         frame.version = version
         background[version] = frame
 
@@ -173,15 +172,11 @@ local function GetBackground(version)
         frame:SetSize(ScreenWidth, height)
         frame:SetFrameStrata(BG_STRATA)
 
-        --[[
-        1: bg positioned in center of screen
-        2: bg positioned 60% from top of screen
-        --]]
+        -- Positions compared with random videos on the youtuubs
         if version == 1 then
-            frame:SetPoint("CENTER", 0, 0)
+            frame:SetPoint("BOTTOM", 0, (ScreenHeight * 0.47) - (height / 2))
         elseif version == 2 then
-            local y = 0.6 * ScreenHeight - bgHeight
-            frame:SetPoint("TOP", 0, -y)
+            frame:SetPoint("BOTTOM", 0, (ScreenHeight * 0.28) - (height / 2))
         end
 
         -- size the background's constituent components
@@ -258,7 +253,7 @@ local function GetYouDiedFrame(version)
     local frame = youDied[version]
     if not frame then
         local parent = background[version]
-        frame = CreateFrame("Frame")
+        frame = CreateFrame("Frame", nil, parent)
         youDied[version] = frame
         frame:SetPoint("CENTER", parent, 0, 0)
 
@@ -274,13 +269,11 @@ local function GetYouDiedFrame(version)
         fadein:SetOrder(1)
         fadein:SetStartDelay(FADE_IN_TIME)
         fadein:SetDuration(FADE_IN_TIME + TEXT_FADE_IN_DURATION)
-        fadein:SetEndDelay(TEXT_END_DELAY)
         local zoom = show:CreateAnimation("Scale")
         zoom:SetOrigin("CENTER", 0, 0)
         zoom:SetScale(TEXT_SHOW_END_SCALE, TEXT_SHOW_END_SCALE)
         zoom:SetOrder(1)
         zoom:SetDuration(1.3)
-        zoom:SetEndDelay(TEXT_END_DELAY)
 
         -- hide animation (fade-out + slower zoom)
         local hide = frame:CreateAnimationGroup()
@@ -300,13 +293,15 @@ local function GetYouDiedFrame(version)
         if version == 1 then
             -- local y = (0.6 * ScreenHeight) + height
             -- frame:SetPoint("TOP", 0, -y)
-
-            local zoom = hide:CreateAnimation("Scale")
-            zoom:SetOrigin("CENTER", 0, 0)
-            zoom:SetScale(1.07, 1.038)
-            zoom:SetOrder(1)
-            zoom:SetDuration(FADE_OUT_TIME + FADE_OUT_DELAY + 0.3)
+            local outZoom = hide:CreateAnimation("Scale")
+            outZoom:SetOrigin("CENTER", 0, 0)
+            outZoom:SetScale(1.07, 1.038)
+            outZoom:SetOrder(1)
+            outZoom:SetDuration(FADE_OUT_TIME + FADE_OUT_DELAY + 0.3)
         elseif version == 2 then
+            fadein:SetEndDelay(TEXT_END_DELAY)
+            zoom:SetEndDelay(TEXT_END_DELAY)
+
             -- frame:SetPoint("CENTER", 0, -0.1 * ScreenHeight)
             fadein:SetScript("OnPlay", function(self)
                 self:SetScript("OnUpdate", function(this, e)
@@ -342,7 +337,6 @@ local function YouDied(version)
         if frame.tex:GetTexture() ~= db.tex then
             frame.tex:SetTexture(db.tex)
         end
-        --frame.tex:SetTexture("greenboxerino")
         frame:SetAlpha(0)
         frame:SetScale(1)
 
