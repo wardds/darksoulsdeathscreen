@@ -84,7 +84,6 @@ local BACKGROUND_HEIGHT_PERCENT = BASE_BACKGROUND_HEIGHT_PERCENT
 local BASE_TEXT_HEIGHT_PERCENT = 0.18       -- of screen height
 local TEXT_HEIGHT_PERCENT = BASE_TEXT_HEIGHT_PERCENT
 
-local ScreenWidth, ScreenHeight = UIParent:GetSize()
 local db
 
 local ADDON_COLOR = "ffFF6600"
@@ -151,6 +150,7 @@ local function GetBackground(version)
 
     local frame = background[version]
     if not frame then
+        local ScreenWidth, ScreenHeight = UIParent:GetSize()
         frame = CreateFrame("Frame", nil, UIParent)
         frame.version = version
         background[version] = frame
@@ -334,6 +334,7 @@ end
 local function YouDied(version)
     local frame = GetYouDiedFrame(version)
     if frame then
+        local _, ScreenHeight = UIParent:GetSize()
         if frame.tex:GetTexture() ~= db.tex then
             frame.tex:SetTexture(db.tex)
         end
@@ -491,6 +492,7 @@ local function GetBonfireLitFrame(version)
         -- from snapping to its original scale
         local function SetEndScale(self)
             local xScale, yScale = self:GetScale()
+            local _, ScreenHeight = UIParent:GetSize()
             local height = TEXT_HEIGHT_PERCENT * ScreenHeight
             local width = height / BONFIRE_WIDTH_HEIGHT_RATIO
             if frame.version == 1 then
@@ -554,6 +556,7 @@ local function BonfireLit(version)
     if frame == nil then
         return
     end
+    local _, ScreenHeight = UIParent:GetSize()
     frame:SetAlpha(0)
     frame.blurred:SetAlpha(0)
     frame:SetScale(BONFIRE_START_SCALE)
