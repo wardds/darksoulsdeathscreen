@@ -1,6 +1,6 @@
-## Interface: 90105
+## Interface: 110002
 ## Title: Dark Souls Death Screen
-## Author: Latreese, Найрра-BoreanTundra
+## Author: Aethyx, Latreese, Найрра-BoreanTundra
 ## Notes: Praise the Sun! \[T]/
 
 ## DefaultState: Enabled
