@@ -17,14 +17,14 @@ local BONFIRE_LIT_SOUND = {
     [2] = MEDIA_PATH .. [[BONFIRELIT2.ogg]],
 }
 local YOU_DIED_WIDTH_HEIGHT_RATIO = 0.32 -- width / height
-local BONFIRE_WIDTH_HEIGHT_RATIO = 0.36 -- w / h
+local BONFIRE_WIDTH_HEIGHT_RATIO = 0.36  -- w / h
 
 local BG_STRATA = "HIGH"
 local TEXT_STRATA = "DIALOG"
 
 local BG_END_ALPHA = {
-    [1] = 0.75, -- [0,1] alpha
-    [2] = 0.9, -- [0,1] alpha
+    [1] = 0.75,            -- [0,1] alpha
+    [2] = 0.9,             -- [0,1] alpha
 }
 local TEXT_END_ALPHA = 0.5 -- [0,1] alpha
 --local BONFIRE_TEXT_END_ALPHA = 0.8 -- [0,1] alpha
@@ -33,18 +33,18 @@ local BONFIRE_TEXT_END_ALPHA = {
     [2] = 0.9, -- [0,1] alpha
 }
 local BONFIRE_BLUR_TEXT_END_ALPHA = {
-    [1] = 0.63, -- [0,1] alpha
-    [2] = 0.75, -- [0,1] alpha
+    [1] = 0.63,                      -- [0,1] alpha
+    [2] = 0.75,                      -- [0,1] alpha
 }
-local TEXT_SHOW_END_SCALE = 1.25 -- scale factor
-local BONFIRE_START_SCALE = 1.15 -- scale factor
-local BONFIRE_END_SCALE_X = 2.5 -- scale factor
-local BONFIRE_END_SCALE_Y = 2.5 -- scale factor
+local TEXT_SHOW_END_SCALE = 1.25     -- scale factor
+local BONFIRE_START_SCALE = 1.15     -- scale factor
+local BONFIRE_END_SCALE_X = 2.5      -- scale factor
+local BONFIRE_END_SCALE_Y = 2.5      -- scale factor
 local BONFIRE_BLUR_END_SCALE_X = 1.5 -- scale factor
 local BONFIRE_BLUR_END_SCALE_Y = 1.5 -- scale factor
 local BONFIRE_FLARE_SCALE_X = {
-    [1] = 1.1, -- scale factor
-    [2] = 1.035, -- scale factor
+    [1] = 1.1,                       -- scale factor
+    [2] = 1.035,                     -- scale factor
 }
 local BONFIRE_FLARE_SCALE_Y = {
     [1] = 1.065, -- scale factor
@@ -52,7 +52,7 @@ local BONFIRE_FLARE_SCALE_Y = {
 }
 local BONFIRE_FLARE_OUT_TIME = {
     [1] = 0.22, -- seconds
-    [2] = 1.4, -- seconds
+    [2] = 1.4,  -- seconds
 }
 local BONFIRE_FLARE_OUT_END_DELAY = {
     [1] = 0.1, -- seconds
@@ -60,28 +60,28 @@ local BONFIRE_FLARE_OUT_END_DELAY = {
 }
 local BONFIRE_FLARE_IN_TIME = 0.6 -- seconds
 local TEXT_FADE_IN_DURATION = {
-    [1] = 0.15, -- seconds
-    [2] = 0.3, -- seconds
+    [1] = 0.15,                   -- seconds
+    [2] = 0.3,                    -- seconds
 }
 local FADE_IN_TIME = {
     [1] = 0.45, -- in seconds
     [2] = 0.13, -- seconds
 }
 local FADE_OUT_TIME = {
-    [1] = 0.3, -- in seconds
-    [2] = 0.16, -- seconds
+    [1] = 0.3,                              -- in seconds
+    [2] = 0.16,                             -- seconds
 }
-local FADE_OUT_DELAY = 0.4 -- in seconds
+local FADE_OUT_DELAY = 0.4                  -- in seconds
 local BONFIRE_FADE_OUT_DELAY = {
-    [1] = 0.55, -- seconds
-    [2] = 0, -- seconds
+    [1] = 0.55,                             -- seconds
+    [2] = 0,                                -- seconds
 }
-local TEXT_END_DELAY = 0.5 -- in seconds
-local BONFIRE_END_DELAY = 0.05 -- in seconds
-local BACKGROUND_GRADIENT_PERCENT = 0.15 -- of background height
+local TEXT_END_DELAY = 0.5                  -- in seconds
+local BONFIRE_END_DELAY = 0.05              -- in seconds
+local BACKGROUND_GRADIENT_PERCENT = 0.15    -- of background height
 local BASE_BACKGROUND_HEIGHT_PERCENT = 0.21 -- of screen height
 local BACKGROUND_HEIGHT_PERCENT = BASE_BACKGROUND_HEIGHT_PERCENT
-local BASE_TEXT_HEIGHT_PERCENT = 0.18 -- of screen height
+local BASE_TEXT_HEIGHT_PERCENT = 0.18       -- of screen height
 local TEXT_HEIGHT_PERCENT = BASE_TEXT_HEIGHT_PERCENT
 
 local ScreenWidth, ScreenHeight = UIParent:GetSize()
@@ -355,7 +355,7 @@ end
 -- -----------
 
 local bonfireIsLighting -- anim is running flag
-local bonfireLit = {} -- frames
+local bonfireLit = {}   -- frames
 
 local function GetBonfireLitFrame(version)
     if not version then return nil end
@@ -535,7 +535,7 @@ local function GetBonfireLitFrame(version)
 
             fadeout:SetScript("OnUpdate", HideBackgroundAfterDelay)
             frame.hide:Play() -- static hide
-            hide:Play() -- blurred hide
+            hide:Play()       -- blurred hide
         end)
         hide:SetScript("OnFinished", function(self)
             -- reset to initial state
@@ -589,9 +589,9 @@ function DSFrame:ADDON_LOADED(event, name)
             default db
             --]]
             enabled = true, -- addon enabled flag
-            sound = true, -- sound enabled flag
+            sound = true,   -- sound enabled flag
             tex = YOU_DIED, -- death animation texture
-            version = 1, -- animation version
+            version = 1,    -- animation version
             scale = 1,
         }
         db = DarkSoulsDeathScreen
@@ -616,11 +616,9 @@ function DSFrame:PLAYER_DEAD(event)
     if not event or not (UnitBuff("player", SpiritOfRedemption) or UnitBuff("player", FeignDeath)) then
 
         -- TODO? cancel other anims (ie, bonfire lit)
-
         if db.sound then
             PlaySoundFile(YOU_DIED_SOUND, "Master")
         end
-
         SpawnBackground(db.version)
         YouDied(db.version)
     end
@@ -655,7 +653,6 @@ function DSFrame:UNIT_SPELLCAST_SUCCEEDED(event, unit, spell, rank, lineId, spel
                 SpawnBackground(db.version)
                 BonfireLit(db.version)
             end
-
         end
     end
 end
@@ -790,7 +787,7 @@ local usage = {
     ("%s%s sound [on/off]: Enables/disables the death screen sound. Toggles if passed no argument."),
     (
         "%s%s tex [path\\to\\custom\\texture]: Toggles between the 'YOU DIED' and 'THANKS OBAMA' textures. If an argument is supplied, the custom texture will be used instead."
-        ),
+    ),
     ("%s%s scale [number]: Set a custom scale for all animations. Defaults to 1 if passed no argument."),
     ("%s%s test [bonfire]: Runs the death animation or the bonfire animation if 'bonfire' is passed as an argument."),
     ("%s%s help: Shows this message."),
