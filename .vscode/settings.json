@@ -7,7 +7,7 @@
         "PlaySoundFile",
         "UIParent",
         "C_Timer",
-        "UnitBuff",
+        "C_UnitAuras",
         "CreateFrame",
         "SlashCmdList"
     ]
