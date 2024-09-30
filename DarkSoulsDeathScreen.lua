@@ -1,7 +1,7 @@
 local print, strsplit, select, tonumber, tostring, wipe, remove = print, strsplit, select, tonumber, tostring, wipe,
     table.remove
-local CreateFrame, PlaySoundFile, UIParent, UnitBuff, C_Timer = CreateFrame, PlaySoundFile,
-    UIParent, UnitBuff, C_Timer
+local CreateFrame, PlaySoundFile, UIParent, GetAuraDataByIndex, C_Timer = CreateFrame, PlaySoundFile,
+    UIParent, C_UnitAuras.GetAuraDataByIndex, C_Timer
 
 local me = ...
 
@@ -613,8 +613,7 @@ local FeignDeath = 5384
 DSFrame:RegisterEvent("PLAYER_DEAD")
 function DSFrame:PLAYER_DEAD(event)
     -- event==nil means a fake event
-    if not event or not (UnitBuff("player", SpiritOfRedemption) or UnitBuff("player", FeignDeath)) then
-
+    if not event or not (GetAuraDataByIndex("player", SpiritOfRedemption, "HELPFUL") or GetAuraDataByIndex("player", FeignDeath, "HELPFUL")) then
         -- TODO? cancel other anims (ie, bonfire lit)
         if db.sound then
             PlaySoundFile(YOU_DIED_SOUND, "Master")
