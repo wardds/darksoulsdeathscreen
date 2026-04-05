@@ -1,7 +1,10 @@
-## Interface: 110002
+## Interface: 120001
 ## Title: Dark Souls Death Screen
+## Category: User Interface
 ## Author: Aethyx, Latreese, Найрра-BoreanTundra
-## Notes: Praise the Sun! \[T]/
+## IconTexture: Interface\Addons\DarkSoulsDeathScreen\media\icon.jpg
+## Notes: Praise the Sun! \[T]/|nSlash command: |cFFFFFF00/dsds|r
+## Version: v1.4
 
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
